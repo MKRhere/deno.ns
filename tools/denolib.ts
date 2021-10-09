@@ -3,17 +3,25 @@ if (!Deno.version.deno.startsWith("1.14")) {
   Deno.exit(1);
 }
 
-const out = new TextDecoder().decode(
+const stable = new TextDecoder().decode(
   await Deno.run({
     cmd: ["deno", "types"],
     stdout: "piped",
   }).output(),
 );
 
-await Deno.writeTextFile(
-  "src/deno/stable/lib.deno.d.ts",
-  out.replace('/// <reference lib="deno.net" />\n', "").replace(
-    `/** A controller object that allows you to abort one or more DOM requests as and
+const unstable = new TextDecoder().decode(
+  await Deno.run({
+    cmd: ["deno", "--unstable", "types"],
+    stdout: "piped",
+  }).output(),
+);
+
+const write = (file: string, out: "stable" | "unstable") =>
+  await Deno.writeTextFile(
+    `src/deno/${out}/lib.deno.d.ts`,
+    file.replace('/// <reference lib="deno.net" />\n', "").replace(
+      `/** A controller object that allows you to abort one or more DOM requests as and
  * when desired. */
 declare class AbortController {
   /** Returns the AbortSignal object associated with this object. */
@@ -24,6 +32,9 @@ declare class AbortController {
 }
 
 `,
-    "",
-  ),
-);
+      "",
+    ),
+  );
+
+write(stable, "stable");
+write(unstable, "unstable");
