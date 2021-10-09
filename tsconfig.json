@@ -15,5 +15,10 @@
       "module": "ES2015"
     }
   },
-  "files": ["src/index.ts", "src/global.ts"]
+  "files": [
+    "src/stable.ts",
+    "src/unstable.ts",
+    "src/global.ts",
+    "src/global-unstable.ts"
+  ]
 }

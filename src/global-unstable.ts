@@ -1,4 +1,4 @@
-import * as globals from "./stable.js";
+import * as globals from "./unstable.js";
 // Adds WhatWG Streams to globalThis
 import "./hacks/web-streams.js";
 
